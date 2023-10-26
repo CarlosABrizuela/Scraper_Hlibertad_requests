@@ -1,0 +1,8 @@
+search_url: https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search
+categories_url: https://www.hiperlibertad.com.ar/api/catalog_system/pub/category/tree/3
+proxy: False
+proxy_ip_port:
+thread_number: 10
+max_attempts: 2
+delay_attempts: 3
+output_dir: C:\Users\LNKIZ\Desktop\testScrapingHLibertad\Scraper_Hlibertad_requests\salida

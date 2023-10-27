@@ -11,7 +11,7 @@ API reference:
 - [How search parameters work](https://developers.vtex.com/docs/guides/how-search-parameters-work)
 - [Search for Products with Filter, Order and Pagination](https://developers.vtex.com/docs/api-reference/search-api#get-/api/catalog_system/pub/products/search)
 
-### To achieve this, first we get the list of categories from the website, then format that as follows
+### To achieve this, we first get the list of categories from the website, then we give it the follow format
 ```json
 [
     {
@@ -20,27 +20,28 @@ API reference:
             {
                 "nombre": "Tecnologia/TV Y VIDEO/TV LED Y SMART TV",
                 "codigo": "1/33/34"
-            },"..."
+            },"...",
     }
     "..."
 ]
 ```
-### We use codigo to form the url.
-Search url: https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search
+### We use 'codigo' to form the url.
+-Search url: https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search
+
 Pagination:
 
-Initial item number - _from={{first}}
+-Initial item number - _from={{first}}
 
-Final item number - _to={{last}}
+-Final item number - _to={{last}}
 
-Category: ?fq=C:[DepartmentId/CategoryId/SubcategoryId]
+-Category: ?fq=C:[DepartmentId/CategoryId/SubcategoryId]
 
-Ending up like this:
+-Ending up like this:
 https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search?&fq=C:{id-cat-1}/{id-cat2}/{id-cat-3}&_from={from}&_to={to}
 
 It returns a json file with add products information that we paginate through this every 10 (configurable) products.
 
-- Output format: **date**__**category-name****.csv**
+### Output format: **date**__**category-name****.csv**
 >'31-10-2023__Tecnologia.csv'
 
 ### To config the script it was used a yaml file: 'config.yaml'

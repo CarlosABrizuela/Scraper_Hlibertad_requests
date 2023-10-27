@@ -40,7 +40,7 @@ Pagination:
 - Ending up like this:
 https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search?&fq=C:{id-cat-1}/{id-cat2}/{id-cat-3}&_from={from}&_to={to}
 
-It returns a json file with add products information that we paginate through this every 10 (configurable) products.
+It returns a json file with the products information that we later paginate through, every a number of pages (configurable) products.
 
 ### Output format: **date**__**category-name****.csv**
 >'31-10-2023__Tecnologia.csv'

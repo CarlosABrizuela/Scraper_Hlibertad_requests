@@ -78,7 +78,7 @@ class ScraperHLibertad:
         """
         param_categories = f"?fq=C:/{sub_category['codigo']}"
         _from = 1
-        _to = 10
+        _to = self.config['pagination']
         # lista= []
         while True:
             pagination= f"&_from={_from}&_to={_to}"

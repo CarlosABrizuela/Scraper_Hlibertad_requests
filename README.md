@@ -20,23 +20,24 @@ API reference:
             {
                 "nombre": "Tecnologia/TV Y VIDEO/TV LED Y SMART TV",
                 "codigo": "1/33/34"
-            },"...",
+            },"..."
+        ]
     }
     "..."
 ]
 ```
 ### We use 'codigo' to form the url.
--Search url: https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search
+- Search url: https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search
 
 Pagination:
 
--Initial item number - _from={{first}}
+- Initial item number - _from={{first}}
 
--Final item number - _to={{last}}
+- Final item number - _to={{last}}
 
--Category: ?fq=C:[DepartmentId/CategoryId/SubcategoryId]
+- Category: ?fq=C:[DepartmentId/CategoryId/SubcategoryId]
 
--Ending up like this:
+- Ending up like this:
 https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search?&fq=C:{id-cat-1}/{id-cat2}/{id-cat-3}&_from={from}&_to={to}
 
 It returns a json file with add products information that we paginate through this every 10 (configurable) products.

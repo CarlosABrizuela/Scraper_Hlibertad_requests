@@ -1,4 +1,3 @@
-from sre_parse import CATEGORIES
 import requests
 import time
 from requests.exceptions import ProxyError
@@ -7,13 +6,14 @@ from urllib.parse import urlparse, parse_qs
 from datetime import datetime
 import csv
 import pandas as pd
+from utility_functions import CONSOLE
 
 class ScraperHLibertad:
     def __init__(self, config):
-        """Inicia el Scraper
+        """Start the Scraper
 
         Args:
-            config (dict): contiene las configuraciones: proxy, proxy_ip_port, output
+            config (dict): it has the configurations: proxy, proxy_ip_port, output
         """
         self.config = config
         self.search_url = self.config['search_url']
@@ -37,19 +37,19 @@ class ScraperHLibertad:
                 if response.ok:
                     return response.json()
                 else:
-                    print(f"Error en la solicitud. Código de estado: {response.status_code}. Reintentando...")
+                    CONSOLE.info(f"Request not ok. Status code: {response.status_code}.")
 
             except ProxyError as e:
-                print('Error de proxy:', e)
+                CONSOLE.error('Proxy error:', e)
                 return None
             except requests.RequestException as e:
-                print(f"Error de solicitud: {e}. Reintentando...")
+                CONSOLE.error(f"Request error: {e}.")
 
             attempts += 1
-            print(f"Reintentando. quedan {max_attempts-attempts} intentos'")
+            CONSOLE.info(f"Retrying. >{max_attempts-attempts} attempts lefts'")
             time.sleep(delay_attempts)
 
-        print(f"No se pudo hacer el request a: {url}. Fin de intentos")
+        CONSOLE.info(f"The request could not be made: {url}. No more attempts")
         return None
     
     def run(self):
@@ -59,12 +59,11 @@ class ScraperHLibertad:
         if not all_categories: return
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.config['thread_number']) as executor:
             executor.map(self.process_department, all_categories)
-        # self.process_department(all_categories[0])
 
         self.close()
     
     def process_department(self, department):
-        """Obtener los productos para cada categoria o departamento(categoria de nivel 1)
+        """Obtain the products for each category or department (level 1 category)
         """
         for sub_category in department['sub_categorias']:
             self.process_subcategory(sub_category)
@@ -72,7 +71,7 @@ class ScraperHLibertad:
         self.crear_csv(department['nombre'])
 
     def process_subcategory(self, sub_category):
-        """Obtener los productos para cada categoria
+        """get all products for every category in the current deparment
         sub={
             'nombre':'', codigo:''
         }
@@ -93,6 +92,7 @@ class ScraperHLibertad:
             _to+= _to
 
     def process_product(self, product):
+        """ extract the product information """
         try:
             dict_prod= {
             'nombre': product['productName'],
@@ -106,9 +106,10 @@ class ScraperHLibertad:
             }
             self.data.append(dict_prod)
         except Exception as e:
-            print(f'(Procesar producto): {e}')
+            CONSOLE.info(f'(Process product): {e}')
         
     def get_sku_from_product(self, url):
+        """ extract the sku value from the 'addToCart' link"""
         parsed_url = urlparse(url)
         query_parameters = parse_qs(parsed_url.query)
         sku = query_parameters.get("sku", None)
@@ -118,8 +119,8 @@ class ScraperHLibertad:
             return None
         
     def get_categories(self):
-        """Obtener la lista de categorias y darles el formato para el procesamiento
-        Necesitamos el codigo para usar en la consulta.
+        """Get the list of categories and format them for processing
+         We need codigo to use in the query.
         formato:
         {
             "nombre": "Tecnologia",
@@ -136,7 +137,7 @@ class ScraperHLibertad:
             return self.process_list_categories(categories_json)
 
     def process_list_categories(self, categories_json):
-        # acumula en una lista las categorias de ultimo nivel, para cada categoria de primer nivel.
+        """ accumulates the last level categories in a list, for each first level category. """
         lista_sup= []
         for category in categories_json:
             sub_categories = []
@@ -154,7 +155,7 @@ class ScraperHLibertad:
         return lista_sup
 
     def process_list_subcategories(self, categorias_json, list_subcats, nombre, codigo):
-        # Devuelve las categorias hojas, o esas que no tienen categorias hijas.
+        """ Returns the leaf categories, or those that do not have child categories. """
         nombre_prev =nombre
         codigo_prev = codigo
         for index, categoria in enumerate(categorias_json):
@@ -176,16 +177,16 @@ class ScraperHLibertad:
 
     def crear_csv(self, category_name):
         """
-            Crea archivo para la categoria actual.
+            To create the csv file with the products.
         """
         date = (datetime.today()).strftime('%d-%m-%Y')
         df = pd.DataFrame(self.data)
         ouput= f'{date}__{category_name}.csv'
         df.to_csv(f'{self.config['output_dir']}/{ouput}',  quoting=csv.QUOTE_MINIMAL)
-        print(f"* Se ha generado el archivo {ouput}")
+        CONSOLE.info(f"* A new output file was generated: {ouput}")
 
     def close(self):
         """
-        Cerrar la sesion
+        Close the session
         """
         self.session.close()

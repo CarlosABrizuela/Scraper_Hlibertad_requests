@@ -4,13 +4,13 @@ from Scraper import ScraperHLibertad
 
 def main():
     """
-    Programa principal
+    Main program
     """
     config = get_config()
     scraper = ScraperHLibertad(config)
     scraper.run()
 
 if __name__ == "__main__":
-    print("Inicio")
+    print("Start")
     main()
-    print("Fin")
+    print("End of program")

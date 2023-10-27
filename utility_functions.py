@@ -1,10 +1,11 @@
 import yaml
 import os
+import logging
 
 main_dir = os.path.dirname(__file__)
 def get_config():
     """
-    Obtiene los datos de configuracion del archivo /file/config.yml
+    get the config file in: /file/config.yml
     """
     file_path = os.path.join(main_dir, 'files', 'config.yaml')
     try:
@@ -20,4 +21,12 @@ def get_config():
         config['max_attempts']= 2
         config['delay_attempts']= 5
         return config
-    
+
+# start the logging
+CONSOLE = logging.getLogger("console_logger")
+CONSOLE.setLevel(logging.DEBUG)  
+console_handler = logging.StreamHandler() 
+console_formatter = logging.Formatter("%(levelname)s - %(message)s")
+console_handler.setFormatter(console_formatter)
+CONSOLE.addHandler(console_handler)
+#

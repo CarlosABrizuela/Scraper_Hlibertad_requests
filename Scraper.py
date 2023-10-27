@@ -44,6 +44,8 @@ class ScraperHLibertad:
                 return None
             except requests.RequestException as e:
                 CONSOLE.error(f"Request error: {e}.")
+            except Exception as e:
+                CONSOLE.error(f"General exception: {e}.")
 
             attempts += 1
             CONSOLE.info(f"Retrying. >{max_attempts-attempts} attempts lefts'")
